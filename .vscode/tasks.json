@@ -1,0 +1,35 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Configure CMake",
+            "command": "cmake",
+            "args": ["--preset", "vcpkg"],
+            "group": "build",
+            "dependsOn": []
+        },
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "rm -rf build/*", 
+            "group": "none"
+        },
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "cmake --build build", 
+            "group": "build"
+        },
+        {
+            "label": "Rebuild",
+            "type": "shell",
+            "dependsOn": [
+                "Clean",
+                "Configure CMake",
+                "Build"
+            ],
+            "dependsOrder": "sequence",
+            "group": "build"
+        }
+    ]
+}
