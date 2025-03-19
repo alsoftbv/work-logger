@@ -1,6 +1,11 @@
 {
-    "files.associations": {
-        "iostream": "cpp",
-        "ios": "cpp"
-    }
+    "editor.formatOnSave": true,
+    "[c]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "editor.formatOnPaste": true,
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }
