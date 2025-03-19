@@ -1,7 +1,14 @@
 #include <CLI/CLI.hpp>
 
-int main(int argc, char** argv) {
-    CLI::App app{"MyApp"};
-    // Here your flags / options
+#include "command/setup.hpp"
+
+int main(int argc, char **argv)
+{
+    CLI::App app{"Work logger helps you log your daily work"};
+
+    setup_commands(app);
+
     CLI11_PARSE(app, argc, argv);
+
+    return 0;
 }

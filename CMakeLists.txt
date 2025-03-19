@@ -6,6 +6,11 @@ project(wlog)
 
 find_package(CLI11 CONFIG REQUIRED)
 
-add_executable(wlog src/main.cpp)
+file(GLOB_RECURSE COMMAND_SOURCES src/command/*.cpp)
+
+add_executable(wlog 
+    src/main.cpp
+    ${COMMAND_SOURCES})
 
 target_link_libraries(wlog PRIVATE CLI11::CLI11)
+target_include_directories(wlog PRIVATE ${CMAKE_SOURCE_DIR}/src/command)
