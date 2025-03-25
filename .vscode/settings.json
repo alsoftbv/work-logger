@@ -7,5 +7,12 @@
         "editor.defaultFormatter": "ms-vscode.cpptools"
     },
     "editor.formatOnPaste": true,
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "files.associations": {
+        "__availability": "cpp",
+        "__config": "cpp",
+        "locale": "cpp",
+        "ostream": "cpp",
+        "ios": "cpp"
+    }
 }

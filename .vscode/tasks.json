@@ -4,21 +4,28 @@
         {
             "label": "Configure CMake",
             "command": "cmake",
-            "args": ["--preset", "vcpkg"],
+            "args": [
+                "-S",
+                "${workspaceFolder}",
+                "-B",
+                "build"
+            ],
             "group": "build",
-            "dependsOn": []
         },
         {
             "label": "Clean",
             "type": "shell",
-            "command": "rm -rf build/*", 
+            "command": "rm -rf build/*",
             "group": "none"
         },
         {
             "label": "Build",
             "type": "shell",
-            "command": "cmake --build build", 
-            "group": "build"
+            "command": "cmake --build build",
+            "group": "build",
+            "dependsOn": [
+                "Configure CMake"
+            ]
         },
         {
             "label": "Rebuild",

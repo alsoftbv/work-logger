@@ -1,6 +1,6 @@
 #include <CLI/CLI.hpp>
 
-#include "command/setup.hpp"
+#include "command/command.hpp"
 
 int main(int argc, char **argv)
 {
