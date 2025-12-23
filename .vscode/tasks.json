@@ -15,7 +15,7 @@
         {
             "label": "Clean",
             "type": "shell",
-            "command": "rm -rf build/*",
+            "command": "rm -rf ${workspaceFolder}/build/*",
             "group": "none"
         },
         {
