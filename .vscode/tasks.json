@@ -2,41 +2,72 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Configure CMake",
+            "label": "configure",
             "command": "cmake",
             "args": [
                 "-S",
                 "${workspaceFolder}",
                 "-B",
-                "build"
+                "build",
+                "-DBUILD_TESTING=OFF"
             ],
-            "group": "build",
+            "hide": true
         },
         {
-            "label": "Clean",
+            "label": "configure-tests",
+            "command": "cmake",
+            "args": [
+                "-S",
+                "${workspaceFolder}",
+                "-B",
+                "build",
+                "-DBUILD_TESTING=ON"
+            ],
+            "hide": true
+        },
+        {
+            "label": "clean",
             "type": "shell",
             "command": "rm -rf ${workspaceFolder}/build/*",
-            "group": "none"
+            "hide": true
         },
         {
-            "label": "Build",
+            "label": "build",
             "type": "shell",
             "command": "cmake --build build",
             "group": "build",
             "dependsOn": [
-                "Configure CMake"
+                "configure"
             ]
         },
         {
-            "label": "Rebuild",
+            "label": "rebuild",
             "type": "shell",
+            "command": "cmake --build build",
+            "group": "build",
             "dependsOn": [
-                "Clean",
-                "Configure CMake",
-                "Build"
+                "clean",
+                "configure"
             ],
-            "dependsOrder": "sequence",
-            "group": "build"
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "install",
+            "type": "shell",
+            "command": "mkdir -p $HOME/.local/bin && cp ${workspaceFolder}/build/app/wlog $HOME/.local/bin/wlog && chmod +x $HOME/.local/bin/wlog",
+            "group": "build",
+            "dependsOn": [
+                "build"
+            ]
+        },
+        {
+            "label": "test",
+            "type": "shell",
+            "command": "cmake --build build && ctest --test-dir build --output-on-failure",
+            "group": "test",
+            "dependsOn": [
+                "configure-tests"
+            ]
         }
     ]
 }

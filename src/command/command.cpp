@@ -1,5 +1,6 @@
 #include "command/command.hpp"
 #include "command/setup.hpp"
+#include "command/log.hpp"
 
 #define MIN_SUBCOMMAND 0
 #define MAX_SUBCOMMAND 1
@@ -16,4 +17,5 @@ void setup_commands(CLI::App &app)
 void add_commands(CLI::App &app)
 {
     add_setup_command(app);
+    add_log_command(app);
 }
