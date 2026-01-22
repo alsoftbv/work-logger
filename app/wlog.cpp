@@ -44,8 +44,9 @@ int main(int argc, char **argv)
     bool report = false;
     std::string report_month;
     bool show = false;
+    bool today_only = false;
 
-    app.add_flag("--setup,-s", run_setup, "Run business setup");
+    app.add_flag("--setup", run_setup, "Run business setup");
     app.add_option("client", client, "Client identifier");
     app.add_option("hours", hours, "Hours worked");
     app.add_option("message", message, "Work description");
@@ -53,7 +54,8 @@ int main(int argc, char **argv)
     app.add_flag("--invoice,-i", invoice, "Generate invoice for previous month");
     app.add_flag("--report,-r", report, "Generate work log report");
     app.add_option("--month,-m", report_month, "Month for report (YYYY-MM), defaults to previous month");
-    app.add_flag("--show", show, "Show current month's work logs");
+    app.add_flag("--show,-s", show, "Show current month's work logs");
+    app.add_flag("--today,-t", today_only, "Show only today's log (use with -s)");
 
     CLI11_PARSE(app, argc, argv);
 
@@ -141,11 +143,17 @@ int main(int argc, char **argv)
     if (show)
     {
         ClientData client_data = ClientManager::load(client);
+        std::string today_date = get_today();
 
         std::string month_key;
         std::string month_display;
 
-        if (report_month.empty())
+        if (today_only)
+        {
+            month_key = today_date.substr(0, 7);
+            month_display = "Today";
+        }
+        else if (report_month.empty())
         {
             auto now = std::chrono::system_clock::now();
             auto now_time = std::chrono::system_clock::to_time_t(now);
@@ -173,15 +181,24 @@ int main(int argc, char **argv)
 
         if (client_data.logs.count(month_key) == 0 || client_data.logs.at(month_key).empty())
         {
-            std::cout << "No logs for this month.\n";
+            std::cout << "No logs for this " << (today_only ? "day" : "month") << ".\n";
             return 0;
         }
 
         std::vector<std::pair<std::string, WorkLog>> sorted_logs;
         for (const auto &[date, log] : client_data.logs.at(month_key))
         {
+            if (today_only && date != today_date)
+                continue;
             sorted_logs.push_back({date, log});
         }
+
+        if (sorted_logs.empty())
+        {
+            std::cout << "No logs for today.\n";
+            return 0;
+        }
+
         std::sort(sorted_logs.begin(), sorted_logs.end(),
                   [](const auto &a, const auto &b)
                   { return a.first < b.first; });
