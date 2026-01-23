@@ -1,73 +1,54 @@
 #include "flow/flow_utils.hpp"
 #include <iostream>
 #include <sstream>
-#include <limits>
+#include <iomanip>
 
 namespace FlowUtils
 {
-    std::string prompt(const std::string &label, const std::string &current_value)
+    std::string prompt(const std::string &label, const std::string &current)
     {
-        if (!current_value.empty())
-        {
-            std::cout << label << " [" << current_value << "]: ";
-        }
+        if (!current.empty())
+            std::cout << label << " [" << current << "]: ";
         else
-        {
             std::cout << label << ": ";
-        }
 
         std::string input;
         std::getline(std::cin, input);
-
-        if (input.empty() && !current_value.empty())
-        {
-            return current_value;
-        }
-
-        return input;
+        return input.empty() && !current.empty() ? current : input;
     }
 
-    std::string prompt_required(const std::string &label, const std::string &current_value)
+    std::string prompt_required(const std::string &label, const std::string &current)
     {
         while (true)
         {
-            std::string result = prompt(label, current_value);
+            std::string result = prompt(label, current);
             if (!result.empty())
-            {
                 return result;
-            }
             std::cout << "This field is required.\n";
         }
     }
 
-    double prompt_double(const std::string &label, double current_value)
+    double prompt_double(const std::string &label, double current)
     {
         while (true)
         {
-            std::string current_str = (current_value > 0) ? std::to_string(current_value) : "";
-            if (!current_str.empty())
+            std::string current_str;
+            if (current > 0)
             {
-                size_t dot_pos = current_str.find('.');
-                if (dot_pos != std::string::npos)
-                {
-                    current_str = current_str.substr(0, dot_pos + 3);
-                }
+                std::ostringstream oss;
+                oss << std::fixed << std::setprecision(2) << current;
+                current_str = oss.str();
             }
 
             std::string input = prompt(label, current_str);
-
-            if (input.empty() && current_value > 0)
-            {
-                return current_value;
-            }
+            if (input.empty() && current > 0)
+                return current;
 
             try
             {
                 double value = std::stod(input);
                 if (value > 0)
-                {
                     return value;
-                }
                 std::cout << "Please enter a positive number.\n";
             }
             catch (...)
@@ -77,25 +58,21 @@ namespace FlowUtils
         }
     }
 
-    int prompt_int(const std::string &label, int current_value)
+    int prompt_int(const std::string &label, int current)
     {
         while (true)
         {
-            std::string current_str = (current_value > 0) ? std::to_string(current_value) : "";
+            std::string current_str = current > 0 ? std::to_string(current) : "";
             std::string input = prompt(label, current_str);
 
-            if (input.empty() && current_value > 0)
-            {
-                return current_value;
-            }
+            if (input.empty() && current > 0)
+                return current;
 
             try
             {
                 int value = std::stoi(input);
                 if (value > 0)
-                {
                     return value;
-                }
                 std::cout << "Please enter a positive number.\n";
             }
             catch (...)

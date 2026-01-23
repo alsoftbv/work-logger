@@ -6,42 +6,39 @@
 
 namespace fs = std::filesystem;
 
-static std::string clean_path(const std::string &path)
+static std::string trim(const std::string &s)
 {
-    std::string result = path;
-
-    // Trim whitespace
-    size_t start = result.find_first_not_of(" \t");
-    size_t end = result.find_last_not_of(" \t");
+    size_t start = s.find_first_not_of(" \t");
     if (start == std::string::npos)
         return "";
-    result = result.substr(start, end - start + 1);
-
-    // Strip surrounding quotes
-    if (result.size() >= 2)
-    {
-        if ((result.front() == '"' && result.back() == '"') ||
-            (result.front() == '\'' && result.back() == '\''))
-        {
-            result = result.substr(1, result.size() - 2);
-        }
-    }
-
-    return result;
+    size_t end = s.find_last_not_of(" \t");
+    return s.substr(start, end - start + 1);
 }
 
-static std::string prompt_logo_path(const std::string &current_value)
+static std::string strip_quotes(const std::string &s)
+{
+    if (s.size() >= 2 &&
+        ((s.front() == '"' && s.back() == '"') ||
+         (s.front() == '\'' && s.back() == '\'')))
+    {
+        return s.substr(1, s.size() - 2);
+    }
+    return s;
+}
+
+static std::string clean_path(const std::string &path)
+{
+    return strip_quotes(trim(path));
+}
+
+static std::string prompt_logo_path(const std::string &current)
 {
     while (true)
     {
-        std::string raw_input = FlowUtils::prompt_required("Logo path", current_value);
-        std::string input = clean_path(raw_input);
+        std::string input = clean_path(FlowUtils::prompt_required("Logo path (JPEG)", current));
 
-        // If keeping existing value that's already in .wlog, accept it
-        if (input == current_value && !current_value.empty() && fs::exists(current_value))
-        {
-            return current_value;
-        }
+        if (input == current && !current.empty() && fs::exists(current))
+            return current;
 
         if (!fs::exists(input))
         {
@@ -49,7 +46,6 @@ static std::string prompt_logo_path(const std::string &current_value)
             continue;
         }
 
-        // Copy to .wlog/logos
         std::string logos_dir = ConfigManager::get_logos_dir();
         fs::create_directories(logos_dir);
 
@@ -65,7 +61,6 @@ static std::string prompt_logo_path(const std::string &current_value)
         catch (const fs::filesystem_error &e)
         {
             std::cout << "Could not copy logo: " << e.what() << "\n";
-            continue;
         }
     }
 }
@@ -81,21 +76,17 @@ void SetupFlow::start()
         std::cout << "Existing configuration found. Press Enter to keep current values.\n\n";
     }
 
-    auto &company = config.company;
-
-    company.name = FlowUtils::prompt_required("Business name", company.name);
-    company.address_line1 = FlowUtils::prompt_required("Address line 1", company.address_line1);
-    company.address_line2 = FlowUtils::prompt_required("Address line 2 (city)", company.address_line2);
-    company.kvk = FlowUtils::prompt_required("KvK number", company.kvk);
-    company.btw = FlowUtils::prompt_required("BTW number", company.btw);
-    company.bank_account = FlowUtils::prompt_required("Bank account (IBAN)", company.bank_account);
-    company.tag = FlowUtils::prompt_required("Company tag (for invoice numbers)", company.tag);
-
-    company.logo_path = prompt_logo_path(company.logo_path);
-
-    company.currency = FlowUtils::prompt("Currency", company.currency.empty() ? "EUR" : company.currency);
+    auto &c = config.company;
+    c.name = FlowUtils::prompt_required("Business name", c.name);
+    c.address_line1 = FlowUtils::prompt_required("Address line 1", c.address_line1);
+    c.address_line2 = FlowUtils::prompt_required("Address line 2 (city)", c.address_line2);
+    c.kvk = FlowUtils::prompt_required("KvK number", c.kvk);
+    c.btw = FlowUtils::prompt_required("BTW number", c.btw);
+    c.bank_account = FlowUtils::prompt_required("Bank account (IBAN)", c.bank_account);
+    c.tag = FlowUtils::prompt_required("Company tag (for invoice numbers)", c.tag);
+    c.logo_path = prompt_logo_path(c.logo_path);
+    c.currency = FlowUtils::prompt("Currency", c.currency.empty() ? "EUR" : c.currency);
 
     ConfigManager::save(config);
-
-    FlowUtils::print_success("Business configuration saved successfully!");
+    FlowUtils::print_success("Business configuration saved!");
 }

@@ -55,9 +55,13 @@ private:
     float draw_totals(float y);
     void draw_footer(float y);
 
-    void draw_rounded_rect(float x, float y, float width, float height, float radius);
+    void text(float x, float y, const std::string &s);
+    void set_font(bool bold, float size);
+    void set_color(float gray);
+    void set_color(float r, float g, float b);
+    void draw_rounded_rect(float x, float y, float w, float h, float r);
     std::string format_currency(double amount);
-    static std::string format_date(const std::string &date);
+    std::string format_date(const std::string &date);
 
     const InvoiceData &data_;
     HPDF_Doc pdf_;

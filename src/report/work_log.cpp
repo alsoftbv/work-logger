@@ -273,8 +273,6 @@ std::string WorkLogPDFBuilder::format_date(const std::string &date)
     return oss.str();
 }
 
-// WorkLogReport implementation
-
 WorkLogReportData WorkLogReport::prepare_data(const std::string &client_id, const std::string &month)
 {
     AppConfig config = ConfigManager::load();
@@ -289,7 +287,6 @@ WorkLogReportData WorkLogReport::prepare_data(const std::string &client_id, cons
     data.hourly_rate = client.hourly_rate;
     data.total_hours = 0;
 
-    // Get log entries for the month
     if (client.logs.count(month_key))
     {
         std::vector<std::pair<std::string, WorkLog>> sorted_logs;

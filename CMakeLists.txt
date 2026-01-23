@@ -36,7 +36,6 @@ FetchContent_Declare(
     GIT_TAG v2.4.4
 )
 
-# Build libharu as static, without PNG (only JPEG logos supported)
 set(LIBHPDF_STATIC ON CACHE BOOL "" FORCE)
 set(LIBHPDF_SHARED OFF CACHE BOOL "" FORCE)
 set(CMAKE_DISABLE_FIND_PACKAGE_PNG ON)
