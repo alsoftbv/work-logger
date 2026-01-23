@@ -1,4 +1,4 @@
-add_library(report SHARED
+add_library(report STATIC
     work_log.cpp
 )
 

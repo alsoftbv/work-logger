@@ -76,11 +76,7 @@ void PDFBuilder::draw_logo()
     // Temporarily disable error handler for logo loading
     HPDF_SetErrorHandler(pdf_, nullptr);
 
-    if (ext == ".png" || ext == ".PNG")
-    {
-        logo = HPDF_LoadPngImageFromFile(pdf_, data_.company_logo.c_str());
-    }
-    else if (ext == ".jpg" || ext == ".jpeg" || ext == ".JPG" || ext == ".JPEG")
+    if (ext == ".jpg" || ext == ".jpeg" || ext == ".JPG" || ext == ".JPEG")
     {
         logo = HPDF_LoadJpegImageFromFile(pdf_, data_.company_logo.c_str());
     }
@@ -108,7 +104,7 @@ void PDFBuilder::draw_logo()
     }
     else
     {
-        std::cerr << "Warning: Could not load logo (unsupported format). Try converting to JPEG.\n";
+        std::cerr << "Warning: Could not load logo. Only JPEG format is supported.\n";
     }
 }
 

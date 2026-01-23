@@ -13,7 +13,7 @@ A CLI tool for freelancers to log work hours and generate invoices.
 ```bash
 cmake -B build
 cmake --build build
-cp build/app/wlog ~/.local/bin/
+cp build/bin/wlog ~/.local/bin/
 ```
 
 ## Usage

@@ -54,7 +54,7 @@
         {
             "label": "install",
             "type": "shell",
-            "command": "mkdir -p $HOME/.local/bin && cp ${workspaceFolder}/build/app/wlog $HOME/.local/bin/wlog && chmod +x $HOME/.local/bin/wlog",
+            "command": "mkdir -p $HOME/.local/bin && cp ${workspaceFolder}/build/bin/wlog $HOME/.local/bin/wlog && chmod +x $HOME/.local/bin/wlog",
             "group": "build",
             "dependsOn": [
                 "build"

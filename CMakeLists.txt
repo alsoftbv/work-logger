@@ -1,12 +1,19 @@
 cmake_minimum_required(VERSION 3.15)
 
 project(work-logger
-        VERSION 0.1
+        VERSION 0.1.1
         DESCRIPTION "Work logging tool for freelancers"
         LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Output binaries to a contained location
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+# Build static libraries for a self-contained binary
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+cmake_policy(SET CMP0077 NEW)
 
 include(FetchContent)
 
@@ -30,6 +37,11 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/libharu/libharu.git
     GIT_TAG v2.4.4
 )
+
+# Build libharu as static, without PNG (only JPEG logos supported)
+set(LIBHPDF_STATIC ON CACHE BOOL "" FORCE)
+set(LIBHPDF_SHARED OFF CACHE BOOL "" FORCE)
+set(CMAKE_DISABLE_FIND_PACKAGE_PNG ON)
 
 FetchContent_MakeAvailable(cli11 json libharu)
 
