@@ -8,10 +8,8 @@ project(work-logger
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Output binaries to a contained location
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# Build static libraries for a self-contained binary
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 cmake_policy(SET CMP0077 NEW)
 
