@@ -11,11 +11,11 @@ void ClientFlow::start(const std::string &client_id)
     if (ClientManager::client_exists(client_id))
     {
         data = ClientManager::load(client_id);
-        std::cout << "Existing client found. Press Enter to keep current values.\n\n";
+        std::cout << "Existing client found. Press Enter to keep current values." << std::endl << std::endl;
     }
     else
     {
-        std::cout << "Setting up new client: " << client_id << "\n\n";
+        std::cout << "Setting up new client: " << client_id << std::endl << std::endl;
     }
 
     data.name = FlowUtils::prompt_required("Client business name", data.name);
@@ -27,5 +27,5 @@ void ClientFlow::start(const std::string &client_id)
 
     ClientManager::save(client_id, data);
 
-    FlowUtils::print_success("Client configuration saved successfully!");
+    FlowUtils::print_success("Client configuration saved!");
 }

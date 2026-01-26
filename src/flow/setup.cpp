@@ -42,7 +42,7 @@ static std::string prompt_logo_path(const std::string &current)
 
         if (!fs::exists(input))
         {
-            std::cout << "File not found: " << input << "\n";
+            std::cout << "File not found: " << input << std::endl;
             continue;
         }
 
@@ -55,12 +55,12 @@ static std::string prompt_logo_path(const std::string &current)
         try
         {
             fs::copy_file(source, dest, fs::copy_options::overwrite_existing);
-            std::cout << "Logo copied to " << dest.string() << "\n";
+            std::cout << "Logo copied to " << dest.string() << std::endl;
             return dest.string();
         }
         catch (const fs::filesystem_error &e)
         {
-            std::cout << "Could not copy logo: " << e.what() << "\n";
+            std::cout << "Could not copy logo: " << e.what() << std::endl;
         }
     }
 }
@@ -73,7 +73,7 @@ void SetupFlow::start()
     if (ConfigManager::config_exists())
     {
         config = ConfigManager::load();
-        std::cout << "Existing configuration found. Press Enter to keep current values.\n\n";
+        std::cout << "Existing configuration found. Press Enter to keep current values." << std::endl << std::endl;
     }
 
     auto &c = config.company;

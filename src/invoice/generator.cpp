@@ -101,7 +101,7 @@ void PDFBuilder::draw_logo()
     }
     else
     {
-        std::cerr << "Warning: Could not load logo. Only JPEG format is supported.\n";
+        std::cerr << "Warning: Could not load logo. Only JPEG format is supported." << std::endl;
     }
 }
 

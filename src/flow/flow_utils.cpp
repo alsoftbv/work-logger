@@ -24,7 +24,7 @@ namespace FlowUtils
             std::string result = prompt(label, current);
             if (!result.empty())
                 return result;
-            std::cout << "This field is required.\n";
+            std::cout << "This field is required." << std::endl;
         }
     }
 
@@ -49,11 +49,11 @@ namespace FlowUtils
                 double value = std::stod(input);
                 if (value > 0)
                     return value;
-                std::cout << "Please enter a positive number.\n";
+                std::cout << "Please enter a positive number." << std::endl;
             }
             catch (...)
             {
-                std::cout << "Invalid number. Please try again.\n";
+                std::cout << "Invalid number. Please try again." << std::endl;
             }
         }
     }
@@ -73,22 +73,22 @@ namespace FlowUtils
                 int value = std::stoi(input);
                 if (value > 0)
                     return value;
-                std::cout << "Please enter a positive number.\n";
+                std::cout << "Please enter a positive number." << std::endl;
             }
             catch (...)
             {
-                std::cout << "Invalid number. Please try again.\n";
+                std::cout << "Invalid number. Please try again." << std::endl;
             }
         }
     }
 
     void print_header(const std::string &title)
     {
-        std::cout << "\n=== " << title << " ===\n\n";
+        std::cout << std::endl << "=== " << title << " ===" << std::endl << std::endl;
     }
 
     void print_success(const std::string &message)
     {
-        std::cout << "\n" << message << "\n";
+        std::cout << std::endl << message << std::endl;
     }
 }
