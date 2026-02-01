@@ -1,4 +1,5 @@
 #include "report/work_log.hpp"
+#include "billing/constants.hpp"
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
@@ -159,7 +160,7 @@ void WorkLogPDFBuilder::draw_summary(float y)
 {
     float col2 = 380;
     float col3 = 480;
-    float summary_height = 100;
+    float summary_height = 130;
 
     if (y - summary_height < MARGIN)
     {
@@ -167,7 +168,7 @@ void WorkLogPDFBuilder::draw_summary(float y)
     }
 
     HPDF_Page_SetRGBFill(page_, 0.95f, 0.95f, 0.95f);
-    draw_rounded_rect(col2 - 20, y - 60, PAGE_WIDTH - MARGIN - col2 + 20, 80, 5);
+    draw_rounded_rect(col2 - 20, y - 96, PAGE_WIDTH - MARGIN - col2 + 20, 116, 5);
 
     HPDF_Page_SetRGBFill(page_, 0, 0, 0);
     HPDF_Page_SetFontAndSize(page_, font_, 10);
@@ -185,10 +186,22 @@ void WorkLogPDFBuilder::draw_summary(float y)
     HPDF_Page_EndText(page_);
 
     y -= 18;
+    HPDF_Page_BeginText(page_);
+    HPDF_Page_TextOut(page_, col2, y, "Subtotal:");
+    HPDF_Page_TextOut(page_, col3, y, format_currency(data_.subtotal).c_str());
+    HPDF_Page_EndText(page_);
+
+    y -= 18;
+    HPDF_Page_BeginText(page_);
+    HPDF_Page_TextOut(page_, col2, y, "VAT (21%):");
+    HPDF_Page_TextOut(page_, col3, y, format_currency(data_.vat).c_str());
+    HPDF_Page_EndText(page_);
+
+    y -= 18;
     HPDF_Page_SetFontAndSize(page_, font_bold_, 11);
     HPDF_Page_BeginText(page_);
-    HPDF_Page_TextOut(page_, col2, y, "Total Amount:");
-    HPDF_Page_TextOut(page_, col3, y, format_currency(data_.total_amount).c_str());
+    HPDF_Page_TextOut(page_, col2, y, "Total:");
+    HPDF_Page_TextOut(page_, col3, y, format_currency(data_.total).c_str());
     HPDF_Page_EndText(page_);
 }
 
@@ -310,7 +323,10 @@ WorkLogReportData WorkLogReport::prepare_data(const std::string &client_id, cons
         }
     }
 
-    data.total_amount = data.total_hours * data.hourly_rate;
+    Billing::AmountBreakdown amounts = Billing::calculate_amounts(data.total_hours, data.hourly_rate);
+    data.subtotal = amounts.subtotal;
+    data.vat = amounts.vat;
+    data.total = amounts.total;
 
     return data;
 }

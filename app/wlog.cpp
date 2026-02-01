@@ -25,14 +25,17 @@ static std::string normalize_month(const std::string &month)
 int main(int argc, char **argv)
 {
     CLI::App app{"Work logger - log hours and generate invoices"};
+    app.usage("wlog <client> <hours> <message> [date]\n"
+              "       wlog <client> [OPTIONS]\n"
+              "       wlog --setup [client]");
 
     WlogOptions opts;
 
-    app.add_flag("--setup", opts.setup, "Run business setup");
+    app.add_flag("--setup", opts.setup, "Run business or client setup");
     app.add_option("client", opts.client, "Client identifier");
     app.add_option("hours", opts.hours, "Hours worked");
     app.add_option("message", opts.message, "Work description");
-    app.add_option("day", opts.day, "Date (YYYY-MM-DD), defaults to today");
+    app.add_option("date", opts.day, "Date (YYYY-MM-DD), defaults to today");
     app.add_flag("--invoice,-i", opts.invoice, "Generate invoice for previous month");
     app.add_flag("--report,-r", opts.report, "Generate work log report");
     app.add_option("--month,-m", opts.month, "Month for report (YYYY-MM), defaults to previous month");
@@ -45,7 +48,19 @@ int main(int argc, char **argv)
 
     if (opts.setup)
     {
-        run_setup();
+        if (opts.client.empty())
+        {
+            run_setup();
+        }
+        else
+        {
+            if (!ConfigManager::config_exists())
+            {
+                std::cout << "No business configuration found. Let's set it up first." << std::endl;
+                run_setup();
+            }
+            run_client_setup(opts.client);
+        }
         return 0;
     }
 

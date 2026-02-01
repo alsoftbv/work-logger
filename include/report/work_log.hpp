@@ -20,7 +20,9 @@ struct WorkLogReportData
     std::string currency;
     double hourly_rate;
     double total_hours;
-    double total_amount;
+    double subtotal;
+    double vat;
+    double total;
     std::vector<WorkLogEntry> entries;
 };
 

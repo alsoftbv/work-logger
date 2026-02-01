@@ -1,4 +1,5 @@
 #include "invoice/generator.hpp"
+#include "billing/constants.hpp"
 #include "storage/config.hpp"
 #include "storage/client.hpp"
 #include <chrono>
@@ -7,8 +8,6 @@
 #include <cmath>
 #include <filesystem>
 #include <iostream>
-
-static const float VAT_RATE = 0.21f;
 
 static void error_handler(HPDF_STATUS error_no, HPDF_STATUS detail_no, void *)
 {
@@ -156,7 +155,7 @@ void PDFBuilder::draw_balance_due_box()
     float y = PAGE_HEIGHT - MARGIN - 100 - 54 - 7;
 
     set_color(0.98f, 0.85f, 0.5f);
-    draw_rounded_rect(x - 10, y - 9, PAGE_WIDTH - MARGIN - x + 10, 30, 5);
+    draw_rounded_rect(x - 5, y - 7, PAGE_WIDTH - MARGIN - x + 5, 22, 5);
 
     set_color(0);
     set_font(true, 12);
@@ -332,8 +331,7 @@ InvoiceData InvoiceGenerator::prepare_data(const std::string &client_id, const s
     std::ostringstream due_ss;
     due_ss << std::put_time(&tm, "%Y-%m-%d");
 
-    double subtotal = total_hours * client.hourly_rate;
-    double vat = subtotal * VAT_RATE;
+    Billing::AmountBreakdown amounts = Billing::calculate_amounts(total_hours, client.hourly_rate);
 
     InvoiceData data;
     data.invoice_number = config.company.tag + "-" + client.tag + "-" + month_key;
@@ -356,9 +354,9 @@ InvoiceData InvoiceGenerator::prepare_data(const std::string &client_id, const s
 
     data.total_hours = total_hours;
     data.hourly_rate = client.hourly_rate;
-    data.subtotal = subtotal;
-    data.vat = vat;
-    data.total = subtotal + vat;
+    data.subtotal = amounts.subtotal;
+    data.vat = amounts.vat;
+    data.total = amounts.total;
 
     return data;
 }
